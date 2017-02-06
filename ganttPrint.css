@@ -8,6 +8,7 @@ BODY, TBODY {
   margin: 0;
   color: #000;
   overflow: visible!important;
+  /*zoom:85%;*/
 }
 
 .teamworkIcon{
@@ -18,39 +19,16 @@ BODY, TBODY {
   width:98% !important;
 }
 
-
-#workSpace{
-  overflow-x: visible !important;
-  overflow-y: visible !important;
-  width: auto !important;
-  height: auto !important;
-  border:none !important;
+.ganttLinesSVG {
+    stroke-width: 0px;
 }
 
-.splitterContainer{
-  width: auto !important;
-  height: auto !important;
-}
-.splitElement{
-  position: static !important;
-  width: auto !important;
-  height: auto !important;
-  top:0 !important;
-  left: 0 !important;
-  overflow-x: visible !important;
-  overflow-y: visible !important;
-}
-
-.vSplitBar,.emptyRow{
-  display: none !important;
+.taskLabelSVG{
+    display: none;
 }
 
 .gdfTable{
    width: 0 !important;
- }
-
-.splitBox2{
-  page-break-before: always !important;
 }
 
 .fixHead{

@@ -1,6 +1,3 @@
-
-
-
   function dateToRelative(localTime){
     var diff=new Date().getTime()-localTime;
     var ret="";
@@ -77,19 +74,19 @@
 
   //override date format i18n
   
-  Date.monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  Date.monthNames = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
   // Month abbreviations. Change this for local month names
-  Date.monthAbbreviations = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  Date.monthAbbreviations = ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"];
   // Full day names. Change this for local month names
-  Date.dayNames =["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  Date.dayNames =["Воскресенье","Понедельник","Вторник","Средник","Четверг","Пятница","Суббота"];
   // Day abbreviations. Change this for local month names
-  Date.dayAbbreviations = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  Date.dayAbbreviations = ["Вск","Пон","Втр","Срд","Чтв","Птн","Суб"];
   // Used for parsing ambiguous dates like 1/2/2000 - default to preferring 'American' format meaning Jan 2.
   // Set to false to prefer 'European' format meaning Feb 1
   Date.preferAmericanFormat = false;
 
-  Date.firstDayOfWeek =1;
-  Date.defaultFormat = "dd/MM/yyyy";
+  Date.firstDayOfWeek = 1;
+  Date.defaultFormat = "dd.MM.yyyy";
 
 
   Number.decimalSeparator = ".";
@@ -98,10 +95,10 @@
   Number.currencyFormat = "##0.00";
 
 
-
   var millisInWorkingDay =36000000;
   var workingDaysPerWeek =5;
 
+  // TODO
   function isHoliday(date) {
     var friIsHoly =false;
     var satIsHoly =true;

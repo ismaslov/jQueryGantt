@@ -37,32 +37,15 @@
   <script src="ganttDrawerSVG.js"></script>
   <!--<script src="ganttDrawer.js"></script>-->
   <script src="ganttGridEditor.js"></script>
-  <script src="ganttMaster.js"></script>  
+  <script src="ganttMaster.js"></script>
+
+  <!--Тестовые данные -->
+  <script src="project1.js"></script>
+  <script src="project2.js"></script>
 </head>
 <body style="background-color: #fff;">
 
-
-<div id="ndo" style="position:absolute;right:5px;top:5px;width:378px;padding:5px;background-color: #FFF5E6; border:1px solid #F9A22F; font-size:12px" class="noprint">
-  This Gantt editor is free thanks to <a href="http://twproject.com" target="_blank">Twproject</a> where it can be used on a complete and flexible project management solution.<br> Get your projects done! Give <a href="http://twproject.com" target="_blank">Twproject a try now</a>.
-</div>
 <div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden;border:1px solid #e5e5e5;position:relative;margin:0 5px"></div>
-
-<div id="taZone" style="display:none;" class="noprint">
-   <textarea rows="8" cols="150" id="ta">
-     {"tasks":[
-     {"id":-1,"name":"Gantt editor","code":"","level":0,"status":"STATUS_ACTIVE","canWrite":true,"start":1396994400000,"duration":21,"end":1399672799999,"startIsMilestone":true,"endIsMilestone":false,"collapsed":false,"assigs":[],"hasChild":true}
-     ,{"id":-2,"name":"coding","code":"","level":1,"status":"STATUS_ACTIVE","canWrite":true,"start":1396994400000,"duration":10,"end":1398203999999,"startIsMilestone":false,"endIsMilestone":false,"collapsed":false,"assigs":[],"description":"","progress":0,"hasChild":true}
-     ,{"id":-3,"name":"gantt part","code":"","level":2,"status":"STATUS_ACTIVE","canWrite":true,"start":1396994400000,"duration":2,"end":1397167199999,"startIsMilestone":false,"endIsMilestone":false,"collapsed":false,"assigs":[],"depends":"","hasChild":false}
-     ,{"id":-4,"name":"editor part","code":"","level":2,"status":"STATUS_SUSPENDED","canWrite":true,"start":1397167200000,"duration":4,"end":1397685599999,"startIsMilestone":false,"endIsMilestone":false,"collapsed":false,"assigs":[],"depends":"3","hasChild":false}
-     ,{"id":-5,"name":"testing","code":"","level":1,"status":"STATUS_SUSPENDED","canWrite":true,"start":1398981600000,"duration":6,"end":1399672799999,"startIsMilestone":false,"endIsMilestone":false,"collapsed":false,"assigs":[],"depends":"2:5","description":"","progress":0,"hasChild":true}
-     ,{"id":-6,"name":"test on safari","code":"","level":2,"status":"STATUS_SUSPENDED","canWrite":true,"start":1398981600000,"duration":2,"end":1399327199999,"startIsMilestone":false,"endIsMilestone":false,"collapsed":false,"assigs":[],"depends":"","hasChild":false}
-     ,{"id":-7,"name":"test on ie","code":"","level":2,"status":"STATUS_SUSPENDED","canWrite":true,"start":1399327200000,"duration":3,"end":1399586399999,"startIsMilestone":false,"endIsMilestone":false,"collapsed":false,"assigs":[],"depends":"6","hasChild":false}
-     ,{"id":-8,"name":"test on chrome","code":"","level":2,"status":"STATUS_SUSPENDED","canWrite":true,"start":1399327200000,"duration":2,"end":1399499999999,"startIsMilestone":false,"endIsMilestone":false,"collapsed":false,"assigs":[],"depends":"6","hasChild":false}
-     ],"selectedRow":0,"canWrite":true,"canWriteOnParent":true}
-   </textarea>
-
-  <button onclick="loadGanttFromServer();">load</button>
-</div>
 
 <style>
   .resEdit {
@@ -96,9 +79,6 @@
 var ge;  //this is the hugly but very friendly global var for the gantt editor
 $(function() {
 
-  //load templates
-  $("#ganttemplates").loadTemplates();
-
   // here starts gantt initialization
   ge = new GanttMaster();
   var workSpace = $("#workSpace");
@@ -106,10 +86,11 @@ $(function() {
   ge.init(workSpace);
 
   //inject some buttons (for this demo only)
-  $(".ganttButtonBar div").append("<button onclick='clearGantt();' class='button'>clear</button>")
-          .append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
-          .append("<button onclick='getFile();' class='button'>export</button>");
-  $(".ganttButtonBar h1").html("<a href='http://twproject.com' title='Twproject the friendly project and work management tool' target='_blank'><img width='80%' src='res/twBanner.jpg'></a>");
+  $(".ganttButtonBar div").append("<button onclick='loadTestProject(project1);' class='button'>Проект 1</button>");
+  $(".ganttButtonBar div").append("<button onclick='loadTestProject(project2);' class='button'>Проект 2</button>");
+//          .append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+//          .append("<button onclick='getFile();' class='button'>export</button>");
+//  $(".ganttButtonBar h1").html("<img src='res/logo.png'>");
   $(".ganttButtonBar div").addClass('buttons');
   //overwrite with localized ones
   loadI18n();
@@ -147,7 +128,7 @@ $(function() {
 function loadGanttFromServer(taskId, callback) {
 
   //this is a simulation: load data from the local storage if you have already played with the demo or a textarea with starting demo data
-  loadFromLocalStorage();
+  loadTestProject(project1);
 
   //this is the real implementation
   /*
@@ -283,8 +264,8 @@ function loadI18n() {
     "INVALID_DATE_FORMAT":"INVALID_DATE_FORMAT",
     "TASK_MOVE_INCONSISTENT_LEVEL":"TASK_MOVE_INCONSISTENT_LEVEL",
 
-    "GANTT_QUARTER_SHORT":"trim.",
-    "GANTT_SEMESTER_SHORT":"sem."
+    "GANTT_QUARTER_SHORT":"кварт.",
+    "GANTT_SEMESTER_SHORT":"полугодие"
   };
 }
 
@@ -312,28 +293,10 @@ Storage.prototype.getObject = function(key) {
 };
 
 
-function loadFromLocalStorage() {
-  var ret;
-  if (localStorage) {
-    if (localStorage.getObject("teamworkGantDemo")) {
-      ret = localStorage.getObject("teamworkGantDemo");
-    }
-  } else {
-    $("#taZone").show();
-  }
-  if (!ret || !ret.tasks || ret.tasks.length == 0){
-    ret = JSON.parse($("#ta").val());
-
-
-    //actualiza data
-    var offset=new Date().getTime()-ret.tasks[0].start;
-    for (var i=0;i<ret.tasks.length;i++)
-      ret.tasks[i].start=ret.tasks[i].start+offset;
-
-
-  }
-  ge.loadProject(ret);
+function loadTestProject(prj) {
+  ge.loadProject(prj);
   ge.checkpoint(); //empty the undo stack
+  $('.taskStatus').off('click');
 }
 
 
@@ -341,8 +304,6 @@ function saveInLocalStorage() {
   var prj = ge.saveProject();
   if (localStorage) {
     localStorage.setObject("teamworkGantDemo", prj);
-  } else {
-    $("#ta").val(JSON.stringify(prj));
   }
 }
 
@@ -419,32 +380,14 @@ function editResources(){
 <div id="gantEditorTemplates" style="display:none;">
   <div class="__template__" type="GANTBUTTONS"><!--
   <div class="ganttButtonBar noprint">
-    <h1 style="float:left">task tree/gantt</h1>
+    <h1 style="float:left">Диаграмма Ганта</h1>
     <div class="buttons">
-    <button onclick="$('#workSpace').trigger('undo.gantt');" class="button textual" title="undo"><span class="teamworkIcon">&#39;</span></button>
-    <button onclick="$('#workSpace').trigger('redo.gantt');" class="button textual" title="redo"><span class="teamworkIcon">&middot;</span></button>
-    <span class="ganttButtonSeparator"></span>
-    <button onclick="$('#workSpace').trigger('addAboveCurrentTask.gantt');" class="button textual" title="insert above"><span class="teamworkIcon">l</span></button>
-    <button onclick="$('#workSpace').trigger('addBelowCurrentTask.gantt');" class="button textual" title="insert below"><span class="teamworkIcon">X</span></button>
-    <span class="ganttButtonSeparator"></span>
-    <button onclick="$('#workSpace').trigger('indentCurrentTask.gantt');" class="button textual" title="indent task"><span class="teamworkIcon">.</span></button>
-    <button onclick="$('#workSpace').trigger('outdentCurrentTask.gantt');" class="button textual" title="unindent task"><span class="teamworkIcon">:</span></button>
-    <span class="ganttButtonSeparator"></span>
-    <button onclick="$('#workSpace').trigger('moveUpCurrentTask.gantt');" class="button textual" title="move up"><span class="teamworkIcon">k</span></button>
-    <button onclick="$('#workSpace').trigger('moveDownCurrentTask.gantt');" class="button textual" title="move down"><span class="teamworkIcon">j</span></button>
-    <span class="ganttButtonSeparator"></span>
     <button onclick="$('#workSpace').trigger('zoomMinus.gantt');" class="button textual" title="zoom out"><span class="teamworkIcon">)</span></button>
     <button onclick="$('#workSpace').trigger('zoomPlus.gantt');" class="button textual" title="zoom in"><span class="teamworkIcon">(</span></button>
-    <span class="ganttButtonSeparator"></span>
-    <button onclick="$('#workSpace').trigger('deleteCurrentTask.gantt');" class="button textual" title="delete"><span class="teamworkIcon">&cent;</span></button>
     <span class="ganttButtonSeparator"></span>
     <button onclick="print();" class="button textual" title="print"><span class="teamworkIcon">p</span></button>
     <span class="ganttButtonSeparator"></span>
     <button onclick="ge.gantt.showCriticalPath=!ge.gantt.showCriticalPath; ge.redraw();" class="button textual" title="Critical Path"><span class="teamworkIcon">&pound;</span></button>
-    <span class="ganttButtonSeparator"></span>
-    <button onclick="editResources();" class="button textual" title="edit resources"><span class="teamworkIcon">M</span></button>
-      &nbsp; &nbsp; &nbsp; &nbsp;
-      <button onclick="saveGanttOnServer();" class="button first big" title="save">save</button>
     </div></div>
   --></div>
 
@@ -454,14 +397,14 @@ function editResources(){
     <tr style="height:40px">
       <th class="gdfColHeader" style="width:35px;"></th>
       <th class="gdfColHeader" style="width:25px;"></th>
-      <th class="gdfColHeader gdfResizable" style="width:30px;">code/short name</th>
+      <th class="gdfColHeader gdfResizable" style="width:30px;">Код</th>
 
-      <th class="gdfColHeader gdfResizable" style="width:300px;">name</th>
-      <th class="gdfColHeader gdfResizable" style="width:80px;">start</th>
-      <th class="gdfColHeader gdfResizable" style="width:80px;">end</th>
-      <th class="gdfColHeader gdfResizable" style="width:50px;">dur.</th>
-      <th class="gdfColHeader gdfResizable" style="width:50px;">dep.</th>
-      <th class="gdfColHeader gdfResizable" style="width:200px;">assignees</th>
+      <th class="gdfColHeader gdfResizable" style="width:300px;">Задача</th>
+      <th class="gdfColHeader gdfResizable" style="width:80px;">Начало</th>
+      <th class="gdfColHeader gdfResizable" style="width:80px;">Конец</th>
+      <th class="gdfColHeader gdfResizable" style="width:70px;">Длит.</th>
+      <th class="gdfColHeader gdfResizable" style="width:70px;">Зав.от</th>
+      <th class="gdfColHeader gdfResizable" style="width:150px;">Ответственный</th>
     </tr>
     </thead>
   </table>
@@ -469,18 +412,18 @@ function editResources(){
 
   <div class="__template__" type="TASKROW"><!--
   <tr taskId="(#=obj.id#)" class="taskEditRow" level="(#=level#)">
-    <th class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> <span class="teamworkIcon" style="font-size:12px;" >e</span></th>
+    <th class="gdfCell" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span></th>
     <td class="gdfCell noClip" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
-    <td class="gdfCell"><input type="text" name="code" value="(#=obj.code?obj.code:''#)"></td>
+    <td class="gdfCell"><input disabled="disabled" type="text" name="code" value="(#=obj.code?obj.code:''#)"></td>
     <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10#)px;">
       <div class="(#=obj.isParent()?'exp-controller expcoll exp':'exp-controller'#)" align="center"></div>
-      <input type="text" name="name" value="(#=obj.name#)">
+      <input disabled="disabled" type="text" name="name" value="(#=obj.name#)">
     </td>
 
-    <td class="gdfCell"><input type="text" name="start"  value="" class="date"></td>
-    <td class="gdfCell"><input type="text" name="end" value="" class="date"></td>
-    <td class="gdfCell"><input type="text" name="duration" value="(#=obj.duration#)"></td>
-    <td class="gdfCell"><input type="text" name="depends" value="(#=obj.depends#)" (#=obj.hasExternalDep?"readonly":""#)></td>
+    <td class="gdfCell"><input disabled="disabled" type="text" name="start"  value="" class="date"></td>
+    <td class="gdfCell"><input disabled="disabled" type="text" name="end" value="" class="date"></td>
+    <td class="gdfCell"><input disabled="disabled" type="text" name="duration" value="(#=obj.duration#)"></td>
+    <td class="gdfCell"><input disabled="disabled" type="text" name="depends" value="(#=obj.depends#)" (#=obj.hasExternalDep?"readonly":""#)></td>
     <td class="gdfCell taskAssigs">(#=obj.getAssigsString()#)</td>
   </tr>
   --></div>
@@ -641,8 +584,8 @@ function editResources(){
       });
     }
 
-
   });
+
 </script>
 </body>
 </html>
