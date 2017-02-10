@@ -452,8 +452,8 @@ var project1 = {
             "name": "Project Manager"
         },
     ],
-    "canWrite": true,
-    "canWriteOnParent": true,
+    "canWrite": false,
+    "canWriteOnParent": false,
     "splitterPosition": 60.05859375,
     "zoom": "s"
 }
