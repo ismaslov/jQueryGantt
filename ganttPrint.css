@@ -34,3 +34,14 @@ BODY, TBODY {
 .fixHead{
   display: none !important;
 }
+
+.vSplitBar{
+	display:none;
+}
+.splitBox1{
+  overflow: hidden;
+}
+
+.splitBox2{
+  overflow: hidden;
+}
